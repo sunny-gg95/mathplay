@@ -1,6 +1,9 @@
+//Multivector.kt
 package com.sunnygg95.mathplay
 
 import kotlin.math.abs
+import kotlin.math.sqrt
+import kotlin.math.pow
 
 data class Multivector (
     val s: Double = 0.0,
@@ -96,6 +99,19 @@ data class Multivector (
         )
     }
 
+    operator fun div(t: Double): Multivector{
+        return Multivector(
+            s = this.s/t,
+            x = this.x/t,
+            y = this.y/t,
+            z = this.z/t,
+            xy = this.xy/t,
+            yz = this.yz/t,
+            zx = this.zx/t,
+            xyz = this.xyz/t
+        )
+    }
+
     fun getGrades(): Set<Int> {
         val grades = mutableSetOf<Int>()
         if (s != 0.0) grades.add(0)
@@ -144,10 +160,24 @@ data class Multivector (
     }
 }
 
+val zero = Multivector(0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
+
 fun Multivector.rightCon(other: Multivector): Multivector {
     return other.leftCon(this) // just flip the arguments
 }
 
-operator fun Double.times(m: Multivector): Multivector{
+fun Multivector.perpendicular(): Multivector {
+    return if (this.x != 0.0 || this.y != 0.0) {
+        Multivector(x = -this.y, y = this.x, z = 0.0)
+    } else {
+        Multivector(x = 0.0, y = -this.z, z = this.y)
+    }
+}
+
+fun Multivector.anotherPerpendicular(): Multivector{
+    return (Multivector(xyz=1.0)*this*this.perpendicular())/(sqrt(this.x.pow(2)+this.y.pow(2)+this.z.pow(2)))
+}
+
+operator fun Double.times(m: Multivector): Multivector {
     return m * this
 }
