@@ -20,7 +20,7 @@ Then you could start doing operation by
     a.leftCon(b)
     a.rightCon(b)
 
-![Logo I guess](https://photos.app.goo.gl/dWZMFGgeF41sUerc9)
+![Logo I guess](assets/logo.png)
 
 **Visualize**
 Inside Stage.kt  find 
