@@ -161,6 +161,7 @@ data class Multivector (
 }
 
 val zero = Multivector(0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)
+val I = Multivector(xyz=1.0)
 
 fun Multivector.rightCon(other: Multivector): Multivector {
     return other.leftCon(this) // just flip the arguments
@@ -174,8 +175,12 @@ fun Multivector.perpendicular(): Multivector {
     }
 }
 
+fun Multivector.vectorSize(): Double {
+    return sqrt((this.x.pow(2)+this.y.pow(2)+this.z.pow(2)))
+}
+
 fun Multivector.anotherPerpendicular(): Multivector{
-    return (Multivector(xyz=1.0)*this*this.perpendicular())/(sqrt(this.x.pow(2)+this.y.pow(2)+this.z.pow(2)))
+    return (I*this.grade(1)*this.perpendicular())/this.vectorSize()
 }
 
 operator fun Double.times(m: Multivector): Multivector {

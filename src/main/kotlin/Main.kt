@@ -9,5 +9,5 @@ fun main() = KoolApplication(
         windowTitle = "Kotlin Geometric Algebra"
     )
 ) {
-    stagedScene(ctx)
+    createStaged(ctx)
 }
