@@ -15,6 +15,29 @@ data class Multivector (
     val zx: Double = 0.0,
     val xyz: Double = 0.0
 ) {
+    companion object {
+        operator fun invoke(
+            s: Number = 0.0,
+            x: Number = 0.0,
+            y: Number = 0.0,
+            z: Number = 0.0,
+            xy: Number = 0.0,
+            yz: Number = 0.0,
+            zx: Number = 0.0,
+            xyz: Number = 0.0
+        ): Multivector {
+            return Multivector(
+                s.toDouble(),
+                x.toDouble(),
+                y.toDouble(),
+                z.toDouble(),
+                xy.toDouble(),
+                yz.toDouble(),
+                zx.toDouble(),
+                xyz.toDouble()
+            )
+        }
+    }
 
     override fun toString(): String {
         val terms = mutableListOf<String>()
@@ -68,6 +91,8 @@ data class Multivector (
         )
     }
 
+    operator fun times(t: Int): Multivector = this * t.toDouble()
+
     operator fun minus(other: Multivector): Multivector{
         return this + (other*(-1.0))
     }
@@ -111,6 +136,8 @@ data class Multivector (
             xyz = this.xyz/t
         )
     }
+
+    operator fun div(t: Int): Multivector = this / t.toDouble()
 
     fun getGrades(): Set<Int> {
         val grades = mutableSetOf<Int>()
@@ -168,11 +195,17 @@ fun Multivector.rightCon(other: Multivector): Multivector {
 }
 
 fun Multivector.perpendicular(): Multivector {
-    return if (this.x != 0.0 || this.y != 0.0) {
+    val originalSize = this.vectorSize()
+    if (originalSize == 0.0) return zero
+
+    val perp = if (this.x != 0.0 || this.y != 0.0) {
         Multivector(x = -this.y, y = this.x, z = 0.0)
     } else {
         Multivector(x = 0.0, y = -this.z, z = this.y)
     }
+
+    // Scale it up so its length perfectly matches originalSize
+    return perp * (originalSize / perp.vectorSize())
 }
 
 fun Multivector.vectorSize(): Double {
@@ -185,4 +218,8 @@ fun Multivector.anotherPerpendicular(): Multivector{
 
 operator fun Double.times(m: Multivector): Multivector {
     return m * this
+}
+
+operator fun Int.times(m: Multivector): Multivector {
+    return m * this.toDouble()
 }
